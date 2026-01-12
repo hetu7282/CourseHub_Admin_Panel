@@ -1,0 +1,232 @@
+flutter version : 3.13.9
+
+***************************************************** Change port no and hostname *****************************************************
+
+Change port no and hostname
+
+
+launch.json file
+
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "web_demo",
+            "request": "launch",
+            "type": "dart",
+            "args": ["-d", "chrome","--web-port", "2003","--web-hostname","10.0.128.31"],  // add line
+        },
+        {
+            "name": "web_demo (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "web_demo (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
+
+
+***************************************************** make build *****************************************************
+
+Step 1
+
+flutter build web
+It will build the project for web browsing.
+
+Step 2
+
+Then copy everything from /build/web  folder(not including build/web) and zip them into a new file. You can name the zip folder anything.
+See the image below for copying
+
+image :  /var/folders/n1/k_j_c88x6b18_mz8ckfmcm3h0000gp/T/com.apple.Notes/HardLinkURLTemp/32426C61-AF77-470A-8FE3-CFC243A2D9C9/1699437620/Project.jpg￼
+
+Step 3
+
+Then go to your Linux machine where you want to deploy the flutter app. I will name it web.dbestech.com. It's the domain name as well, I will use this name to visit the site on the browser. 
+Now cd to your folder and create another folder inside it. Name it public-flutter
+
+Step 4
+
+create a two files in web.dbestech.com named as app.js and package.json
+Now copy the below code in app.js
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+
+var app = express();
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public-flutter')));
+
+
+module.exports = app;
+Copy the below code in package.json
+{
+  "name": "flutter-web-app",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "morgan": "~1.9.1"
+  }
+}
+
+Step 5
+
+In the same folder run the below command to install the necessary dependencies
+yum install nodejs
+npm install express
+npm install cookie-parser
+npm install morgan
+Execute the above command one by one.
+
+Step 6
+
+Now drag the zip folder in the step 2 and put into public-flutter folder. You can ftp to upload the file. Next unzip the folder
+
+Step 7
+
+Now we need to create virtual host for website
+<VirtualHost *:80>
+    ServerAdmin webmaster@example.com
+    DocumentRoot "/var/www/html/web.dbestech.com/public-flutter"
+    ServerName web.dbestech.com
+    ServerAlias web.dbestech.com
+    #errorDocument 404 /404.html
+    ErrorLog "/var/www/html/web.dbestech.com-error_log"
+    CustomLog "/var/www/html/web.dbestech.com-access_log" combined
+
+    
+    #DENY FILES
+     <Files ~ (\.user.ini|\.htaccess|\.git|\.svn|\.project|LICENSE|README.md)$>
+       Order allow,deny
+       Deny from all
+    </Files>
+    
+    #PATH
+    <Directory "/var/www/html/web.dbestech.com/public-flutter">
+        SetOutputFilter DEFLATE
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+        DirectoryIndex index.php index.html index.htm default.php default.html default.htm
+    </Directory>
+</VirtualHost>
+ Replace web.dbestech.com with your url.
+
+Step 8
+
+Run the below command in your Linux terminal
+service httpd restart
+
+Step 9
+
+run the below command
+node app.js
+
+***************************************************** BackUp *****************************************************
+
+ProvisionProfile Path
+~/Library/MobileDevice/Provisioning Profiles
+
+Backup Notes
+~/Library/Group Containers/group.com.apple.notes/
+
+***************************************************** Run Commcand *****************************************************
+
+cmd :: web run 
+
+flutter run -d chrome --web-renderer html
+
+***************************************************** Project Introduction *****************************************************
+
+Project Introduction: Coach Hub
+
+Purpose:
+Coach Hub is poised to revolutionize the coaching industry by providing a centralized platform that seamlessly connects individuals with qualified coaches. Our mission is to catalyze personal growth, foster professional advancement, and enhance overall well-being. Through tailored coaching sessions, we address specific goals and challenges, empowering our users to unlock their full potential.
+
+Key Features:
+* Comprehensive Coach Directory: Our platform boasts a comprehensive directory of coaches, categorized for easy filtering. This ensures that users can effortlessly find the right coach to meet their needs.
+* Secure Communication: Coach Hub prioritizes privacy and confidentiality through secure messaging and video conferencing channels. Direct contact options like WhatsApp or Telegram further safeguard interactions.
+* Goal Tracking and Progress Monitoring: Users are empowered to set actionable goals and track their progress with intuitive dashboards and performance analytics. This facilitates continuous improvement and goal attainment.
+* Data Privacy: We prioritize user privacy and data security, implementing robust encryption measures and strict privacy policies to safeguard sensitive information.
+* Matching Algorithm: Our sophisticated matching algorithm connects customers with coaches based on their goals, interests, and preferences, ensuring optimal consistency and enhancing the coaching experience.
+* Mobile Accessibility: Coach Hub is accessible on mobile devices, enabling users to connect with coaching resources and sessions anytime, anywhere, enhancing accessibility and convenience.
+* Flexible Scheduling: Clients can book coaching sessions at their convenience, adapting to their busy lifestyles with flexible scheduling options.
+
+
+Benefits:
+	
+* Personalized Coaching: Coach Hub offers personalized coaching experiences tailored to each client's unique needs, preferences, and objectives.
+* Convenience: Our platform eliminates geographical barriers, allowing clients to engage in coaching sessions from anywhere, at any time, enhancing flexibility and convenience.
+* Professional Development: Coaches can leverage Coach Hub to expand their client base, enhance visibility, and build their coaching practice through user-friendly interfaces and robust marketing tools.
+* Empowerment: By fostering a supportive environment and providing access to valuable resources, Coach Hub empowers individuals to unlock their full potential and achieve their aspirations.
+
+
+Through Coach Hub, we aim to facilitate transformative coaching experiences that inspire growth, development, and success.
+
+
+***************************************************** Scope *****************************************************
+
+
+
+Admin :
+
+Course categories are modifiable by the administrator.
+The admin can change, add, or remove banner pictures.
+Administrators can only view and delete users.
+Administrators can only view and delete coaches. 
+The administrator can only modify the information about us, the contact information, and the terms and conditions.
+Administrators can only view All Users and All Coaches.
+
+
+Coach : 
+
+A coach has the ability to create an account.
+Coaches have the ability to change and add courses based on category.
+Coaches have access to extra curricula.
+Coach Viewing purchased courses is possible through the user's profile.
+Coach can reach the individual on WhatsApp and Telegram.
+Coach is able to see Concerning US
+Coach has access to the Terms of Use.
+Coach has access to banner views.
+Coaches can use WhatsApp and Telegram to view contact us and contact the admin.
+Profiles can be edited by coaches.
+Passwords can be changed by coaches.
+
+
+Student : 
+
+A student can create an account
+Students can access courses and course information according to categories.
+The student purchases the course after choosing Premium.
+After viewing the first video for free, students can buy the course if they watch the other ones.
+Only all courses that have been purchased are shown to students.
+It is not possible to view courses that were purchased after the deadline.
+Students can use WhatsApp and Telegram to communicate with Coach.
+Students' paid courses are visible in the coach's profile.
+Students have access to About US
+Pupils can view the Terms of Use.
+Pupils can see banner images
+Students can use WhatsApp and Telegram to read our contact information and get in touch with the admin.
+Pupils can modify profiles.
+Pupils can modify their credentials.
