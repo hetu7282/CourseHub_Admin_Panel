@@ -1,4 +1,4 @@
-# 🖥️ Coures Admin App (CourseHub Admin Panel)
+# 🖥️ CourseHub Admin App (Coures Admin Panel)
 <p align="center">
 <img width="150" height="150" alt="logo" src="https://github.com/user-attachments/assets/7bcb5104-7cf1-4e9d-af95-f1f2ef4f91e4" />
 </p>
